@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Flutter InAppBrowser</title>
+
+    </head>
+    <body>
+	
+		<div>
+			<div id="flutter-msg"></div><br><br>
+			<div>
+			  請輸入傳給flutter的值：<input id="inputBox" placeholder="output to flutter">
+			</div>
+			<button onclick="toFlutter()">點擊傳值給Flutter</button><br>
+			<button style="margin-top: 10px" onclick="toFlutterPage()">跳到指定頁面</button>
+		</div>
+
+        <script>
+			// In order to call window.flutter_inappwebview.callHandler(handlerName <String>, ...args) 
+			// properly, you need to wait and listen the JavaScript event flutterInAppWebViewPlatformReady. 
+			// This event will be dispatched as soon as the platform (Android or iOS) is ready to handle the callHandler method. 
+			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+            // call flutter handler with name 'fromFlutter' and pass one or more arguments
+			// 監聽app端傳入的值
+				window.flutter_inappwebview.callHandler('fromFlutter').then(function(result) {
+					// get result from Flutter side. It will be the number 64.
+					document.getElementById("flutter-msg").innerHTML = result;
+				});
+           });
+		   
+		   // call flutter handler with name 'toFlutter' and pass one or more arguments
+			// 傳值給flutter
+			const toFlutter = function(...args) {
+				var value = document.getElementById("inputBox").value;
+				return window.flutter_inappwebview.callHandler('toFlutter', value);
+			};
+			
+			// 傳值給flutter
+			const toFlutterPage = function(...args) {
+				return window.flutter_inappwebview.callHandler('toFlutterPage', "flutterweb2://result");
+			};
+        </script>
+    </body>
+</html>
