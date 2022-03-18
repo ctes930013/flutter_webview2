@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutterwebview2/result.dart';
+import 'package:flutterwebview2/text_edit.dart';
 
 class Web extends StatefulWidget{
 
@@ -21,7 +22,7 @@ class Web extends StatefulWidget{
 
 class _WebState extends State<Web> {
 
-  TextEditingController keyText = TextEditingController();      //欄位輸入框
+  final GlobalKey<TextEditState> textEditKey = GlobalKey();
   //定義webview的url
   final String url = "lib/assets/flutter.html";
   late String txt;
@@ -50,13 +51,8 @@ class _WebState extends State<Web> {
                 children: [
                   SizedBox(
                     width: 250,
-                    child: TextField(
-                      controller: keyText,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.title),
-                        labelText: "請輸入要傳入WebView的值",
-                      ),
+                    child: TextEdit(
+                      key: textEditKey,
                     ),
                   ),
                   Expanded(
@@ -182,7 +178,7 @@ class _WebState extends State<Web> {
 
   //傳值到webview按鈕觸發事件
   void submit(context) {
-    String txt = keyText.value.text;
+    String txt = textEditKey.currentState?.getValue() ?? "";
     if(txt == ""){
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("請勿為空"),

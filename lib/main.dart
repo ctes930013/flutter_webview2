@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterwebview2/text_edit.dart';
 import 'package:flutterwebview2/web.dart';
 
 void main() => runApp(MaterialApp(
@@ -8,11 +9,11 @@ void main() => runApp(MaterialApp(
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
-  TextEditingController keyText = TextEditingController();      //欄位輸入框
+  final GlobalKey<TextEditState> textEditKey = GlobalKey();      //欄位輸入框
 
   //按鈕觸發事件
   void submit(context) {
-    String txt = keyText.value.text;
+    String txt = textEditKey.currentState?.getValue() ?? "";
     if(txt == ""){
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("請勿為空"),
@@ -41,13 +42,8 @@ class HomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextField(
-                  controller: keyText,
-                  keyboardType: TextInputType.text,
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.title),
-                    labelText: "請輸入要傳入WebView的值",
-                  ),
+                TextEdit(
+                  key: textEditKey,
                 ),
                 Container(
                   margin: const EdgeInsets.all(15),
